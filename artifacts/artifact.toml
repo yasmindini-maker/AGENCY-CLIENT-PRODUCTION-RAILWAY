@@ -1,28 +1,17 @@
-kind = "web"
-previewPath = "/"
-title = "Agency Client Portal"
-description = "A premium multi-tenant workspace for small agencies to manage client projects, milestones, tasks, deliverables, invoices, and activity in one place."
+kind = "design"
+previewPath = "/__mockup"
+title = "Canvas"
 version = "1.0.0"
-id = "artifacts/agency-client-portal"
-router = "path"
+id = "XegfDyZt7HqfW2Bb8Ghoy"
 
 [[services]]
-name = "web"
-paths = [ "/" ]
-localPort = 18642
-
-[services.development]
-run = "pnpm --filter @workspace/agency-client-portal run dev"
-
-[services.production]
-build = [ "pnpm", "--filter", "@workspace/agency-client-portal", "run", "build" ]
-serve = "static"
-publicDir = "artifacts/agency-client-portal/dist/public"
-
-[[services.production.rewrites]]
-from = "/*"
-to = "/index.html"
+localPort = 8081
+name = "Component Preview Server"
+paths = ["/__mockup"]
 
 [services.env]
-PORT = "18642"
-BASE_PATH = "/"
+PORT = "8081"
+BASE_PATH = "/__mockup"
+
+[services.development]
+run = "pnpm --filter @workspace/mockup-sandbox run dev"

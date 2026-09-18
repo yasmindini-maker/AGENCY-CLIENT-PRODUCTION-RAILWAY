@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Agency Client Portal"
+description = "A premium multi-tenant workspace for small agencies to manage client projects, milestones, tasks, deliverables, invoices, and activity in one place."
+version = "1.0.0"
+id = "artifacts/agency-client-portal"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18642
+
+[services.development]
+run = "pnpm --filter @workspace/agency-client-portal run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/agency-client-portal", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/agency-client-portal/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18642"
+BASE_PATH = "/"

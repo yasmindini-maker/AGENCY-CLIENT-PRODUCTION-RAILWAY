@@ -1,0 +1,625 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: Agency Client Portal API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+  - name: dashboard
+  - name: projects
+  - name: clients
+  - name: tasks
+  - name: milestones
+  - name: deliverables
+  - name: invoices
+  - name: notifications
+  - name: activity
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /dashboard:
+    get:
+      operationId: getDashboard
+      tags: [dashboard]
+      summary: Get agency dashboard summary
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Dashboard"
+  /projects:
+    get:
+      operationId: listProjects
+      tags: [projects]
+      summary: List projects
+      parameters:
+        - $ref: "#/components/parameters/Search"
+        - $ref: "#/components/parameters/Status"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Projects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectList"
+    post:
+      operationId: createProject
+      tags: [projects]
+      summary: Create a project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectInput"
+      responses:
+        "201":
+          description: Created project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+  /projects/{projectId}:
+    get:
+      operationId: getProject
+      tags: [projects]
+      summary: Get project detail
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "200":
+          description: Project detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectDetail"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      operationId: updateProject
+      tags: [projects]
+      summary: Update a project
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectUpdate"
+      responses:
+        "200":
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+    delete:
+      operationId: deleteProject
+      tags: [projects]
+      summary: Soft delete a project
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "204":
+          description: Deleted
+  /clients:
+    get:
+      operationId: listClients
+      tags: [clients]
+      summary: List agency clients
+      responses:
+        "200":
+          description: Clients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Client"
+  /tasks:
+    get:
+      operationId: listTasks
+      tags: [tasks]
+      summary: List tasks
+      parameters:
+        - $ref: "#/components/parameters/ProjectIdOptional"
+        - $ref: "#/components/parameters/TaskStatus"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Tasks
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskList"
+    post:
+      operationId: createTask
+      tags: [tasks]
+      summary: Create a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskInput"
+      responses:
+        "201":
+          description: Created task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+  /tasks/{taskId}:
+    patch:
+      operationId: updateTask
+      tags: [tasks]
+      summary: Update a task
+      parameters:
+        - $ref: "#/components/parameters/TaskId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskUpdate"
+      responses:
+        "200":
+          description: Updated task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+  /milestones:
+    get:
+      operationId: listMilestones
+      tags: [milestones]
+      summary: List milestones
+      parameters:
+        - $ref: "#/components/parameters/ProjectIdOptional"
+      responses:
+        "200":
+          description: Milestones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Milestone"
+    post:
+      operationId: createMilestone
+      tags: [milestones]
+      summary: Create a milestone
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MilestoneInput"
+      responses:
+        "201":
+          description: Created milestone
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Milestone"
+  /milestones/{milestoneId}:
+    patch:
+      operationId: updateMilestone
+      tags: [milestones]
+      summary: Update a milestone
+      parameters:
+        - $ref: "#/components/parameters/MilestoneId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MilestoneUpdate"
+      responses:
+        "200":
+          description: Updated milestone
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Milestone"
+  /deliverables:
+    get:
+      operationId: listDeliverables
+      tags: [deliverables]
+      summary: List deliverables
+      parameters:
+        - $ref: "#/components/parameters/ProjectIdOptional"
+      responses:
+        "200":
+          description: Deliverables
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Deliverable"
+  /invoices:
+    get:
+      operationId: listInvoices
+      tags: [invoices]
+      summary: List invoices
+      parameters:
+        - $ref: "#/components/parameters/ProjectIdOptional"
+      responses:
+        "200":
+          description: Invoices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Invoice"
+    post:
+      operationId: createInvoice
+      tags: [invoices]
+      summary: Create an invoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvoiceInput"
+      responses:
+        "201":
+          description: Created invoice
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
+  /invoices/{invoiceId}/paid:
+    post:
+      operationId: markInvoicePaid
+      tags: [invoices]
+      summary: Mark an invoice paid
+      parameters:
+        - $ref: "#/components/parameters/InvoiceId"
+      responses:
+        "200":
+          description: Updated invoice
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
+  /notifications:
+    get:
+      operationId: listNotifications
+      tags: [notifications]
+      summary: List notifications
+      responses:
+        "200":
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+  /activity:
+    get:
+      operationId: listActivity
+      tags: [activity]
+      summary: List recent activity
+      parameters:
+        - $ref: "#/components/parameters/ProjectIdOptional"
+      responses:
+        "200":
+          description: Activity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Activity"
+components:
+  parameters:
+    ProjectId:
+      name: projectId
+      in: path
+      required: true
+      schema: { type: string }
+    ProjectIdOptional:
+      name: projectId
+      in: query
+      required: false
+      schema: { type: string }
+    TaskId:
+      name: taskId
+      in: path
+      required: true
+      schema: { type: string }
+    MilestoneId:
+      name: milestoneId
+      in: path
+      required: true
+      schema: { type: string }
+    InvoiceId:
+      name: invoiceId
+      in: path
+      required: true
+      schema: { type: string }
+    Search:
+      name: search
+      in: query
+      required: false
+      schema: { type: string }
+    Status:
+      name: status
+      in: query
+      required: false
+      schema: { type: string }
+    TaskStatus:
+      name: status
+      in: query
+      required: false
+      schema: { type: string }
+    Page:
+      name: page
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, default: 1 }
+    PageSize:
+      name: pageSize
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    HealthStatus:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string }
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+    Agency:
+      type: object
+      required: [id, name, initials]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        initials: { type: string }
+    Client:
+      type: object
+      required: [id, name, email, company, initials, projectCount]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        email: { type: string, format: email }
+        company: { type: string }
+        initials: { type: string }
+        projectCount: { type: integer }
+    Project:
+      type: object
+      required: [id, name, clientName, clientId, status, health, progress, dueDate, budget, paid, milestoneCount, taskCount]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        clientName: { type: string }
+        clientId: { type: string }
+        status: { type: string }
+        health: { type: string }
+        progress: { type: integer, minimum: 0, maximum: 100 }
+        dueDate: { type: string, format: date }
+        budget: { type: number }
+        paid: { type: number }
+        milestoneCount: { type: integer }
+        taskCount: { type: integer }
+        description: { type: ["string", "null"] }
+    ProjectDetail:
+      allOf:
+        - $ref: "#/components/schemas/Project"
+        - type: object
+          required: [milestones, tasks, deliverables, invoices, activity]
+          properties:
+            milestones:
+              type: array
+              items: { $ref: "#/components/schemas/Milestone" }
+            tasks:
+              type: array
+              items: { $ref: "#/components/schemas/Task" }
+            deliverables:
+              type: array
+              items: { $ref: "#/components/schemas/Deliverable" }
+            invoices:
+              type: array
+              items: { $ref: "#/components/schemas/Invoice" }
+            activity:
+              type: array
+              items: { $ref: "#/components/schemas/Activity" }
+    ProjectInput:
+      type: object
+      required: [name, clientId, dueDate, budget]
+      properties:
+        name: { type: string, minLength: 1 }
+        clientId: { type: string }
+        dueDate: { type: string, format: date }
+        budget: { type: number, minimum: 0 }
+        description: { type: string }
+    ProjectUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+        status: { type: string }
+        health: { type: string }
+        progress: { type: integer, minimum: 0, maximum: 100 }
+        dueDate: { type: string, format: date }
+        budget: { type: number, minimum: 0 }
+        description: { type: string }
+    ProjectList:
+      type: object
+      required: [items, total, page, pageSize]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Project" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    Milestone:
+      type: object
+      required: [id, projectId, name, status, progress, dueDate, description]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        name: { type: string }
+        status: { type: string }
+        progress: { type: integer }
+        dueDate: { type: string, format: date }
+        description: { type: string }
+    MilestoneInput:
+      type: object
+      required: [projectId, name, dueDate]
+      properties:
+        projectId: { type: string }
+        name: { type: string }
+        dueDate: { type: string, format: date }
+        description: { type: string }
+    MilestoneUpdate:
+      type: object
+      properties:
+        name: { type: string }
+        status: { type: string }
+        progress: { type: integer }
+        dueDate: { type: string, format: date }
+        description: { type: string }
+    Task:
+      type: object
+      required: [id, projectId, title, owner, dueDate, priority, status]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        title: { type: string }
+        owner: { type: string }
+        dueDate: { type: string, format: date }
+        priority: { type: string }
+        status: { type: string }
+    TaskList:
+      type: object
+      required: [items, total, page, pageSize]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Task" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    TaskInput:
+      type: object
+      required: [projectId, title, dueDate, priority]
+      properties:
+        projectId: { type: string }
+        title: { type: string }
+        owner: { type: string }
+        dueDate: { type: string, format: date }
+        priority: { type: string }
+    TaskUpdate:
+      type: object
+      properties:
+        title: { type: string }
+        owner: { type: string }
+        dueDate: { type: string, format: date }
+        priority: { type: string }
+        status: { type: string }
+    Deliverable:
+      type: object
+      required: [id, projectId, title, type, updatedAt, shareCount, url]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        title: { type: string }
+        type: { type: string }
+        updatedAt: { type: string, format: date-time }
+        shareCount: { type: integer }
+        url: { type: string }
+    Invoice:
+      type: object
+      required: [id, projectId, number, amount, status, dueDate, issuedDate]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        number: { type: string }
+        amount: { type: number }
+        status: { type: string }
+        dueDate: { type: string, format: date }
+        issuedDate: { type: string, format: date }
+    InvoiceInput:
+      type: object
+      required: [projectId, amount, dueDate]
+      properties:
+        projectId: { type: string }
+        amount: { type: number, minimum: 0 }
+        dueDate: { type: string, format: date }
+    Notification:
+      type: object
+      required: [id, title, description, type, createdAt, read]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        description: { type: string }
+        type: { type: string }
+        createdAt: { type: string, format: date-time }
+        read: { type: boolean }
+    Activity:
+      type: object
+      required: [id, action, actor, createdAt, type]
+      properties:
+        id: { type: string }
+        action: { type: string }
+        actor: { type: string }
+        createdAt: { type: string, format: date-time }
+        type: { type: string }
+    Dashboard:
+      type: object
+      required: [agency, stats, projects, notifications, activity]
+      properties:
+        agency: { $ref: "#/components/schemas/Agency" }
+        stats:
+          type: object
+          required: [activeProjects, dueThisWeek, outstanding, unreadNotifications]
+          properties:
+            activeProjects: { type: integer }
+            dueThisWeek: { type: integer }
+            outstanding: { type: number }
+            unreadNotifications: { type: integer }
+        projects:
+          type: array
+          items: { $ref: "#/components/schemas/Project" }
+        notifications:
+          type: array
+          items: { $ref: "#/components/schemas/Notification" }
+        activity:
+          type: array
+          items: { $ref: "#/components/schemas/Activity" }

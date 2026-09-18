@@ -1,0 +1,1 @@
+{"version":3,"file":"deliverable.d.ts","sourceRoot":"","sources":["../../../src/generated/types/deliverable.ts"],"names":[],"mappings":"AAAA;;;;;;GAMG;AAEH,MAAM,WAAW,WAAW;IAC1B,EAAE,EAAE,MAAM,CAAC;IACX,SAAS,EAAE,MAAM,CAAC;IAClB,KAAK,EAAE,MAAM,CAAC;IACd,IAAI,EAAE,MAAM,CAAC;IACb,SAAS,EAAE,IAAI,CAAC;IAChB,UAAU,EAAE,MAAM,CAAC;IACnB,GAAG,EAAE,MAAM,CAAC;CACb"}
